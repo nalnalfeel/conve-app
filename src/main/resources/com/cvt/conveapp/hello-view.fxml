@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox spacing="24.0" prefWidth="1050.0" prefHeight="650.0"
+      stylesheets="@style.css"
+      style="-fx-padding: 24;"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cvt.conveapp.MainController">
+
+    <!-- SISI KIRI: PANEL KONTROL KONVERSI -->
+    <VBox alignment="TOP_CENTER" spacing="18.0" prefWidth="430.0" styleClass="card-panel" HBox.hgrow="ALWAYS">
+        <padding>
+            <Insets top="24.0" right="24.0" bottom="24.0" left="24.0"/>
+        </padding>
+
+        <!-- Judul Aplikasi -->
+        <Label text="Document &amp; OCR Converter" styleClass="app-title"/>
+
+        <!-- Dropdown Mode Konversi -->
+        <HBox alignment="CENTER" spacing="10.0">
+            <Label text="Pilih Mode:" styleClass="label-text"/>
+            <ComboBox fx:id="conversionTypeBox" prefWidth="270.0" promptText="Pilih Jenis Konversi"/>
+        </HBox>
+
+        <!-- Area Drag and Drop -->
+        <VBox fx:id="dropArea" alignment="CENTER" spacing="12.0" prefHeight="180.0"
+              onDragOver="#handleDragOver" onDragDropped="#handleDragDropped"
+              styleClass="drop-zone">
+            <Label fx:id="fileLabel" text="Tarik &amp; Lepas Berkas di Sini"
+                   styleClass="label-text" wrapText="true" alignment="CENTER"/>
+            <Button text="Pilih Berkas" onAction="#handleSelectFile" styleClass="btn-secondary" prefWidth="120.0" prefHeight="32.0"/>
+        </VBox>
+
+        <!-- Tombol Eksekusi -->
+        <Button fx:id="convertButton" text="Mulai Konversi / OCR" onAction="#handleConvert"
+                prefWidth="260.0" prefHeight="42.0" styleClass="btn-primary"/>
+
+        <!-- Progress & Status -->
+        <VBox alignment="CENTER" spacing="8.0">
+            <ProgressBar fx:id="progressBar" prefWidth="380.0" progress="0.0" visible="false"/>
+            <Label fx:id="statusLabel" text="Siap" styleClass="label-text"/>
+        </VBox>
+    </VBox>
+
+    <!-- SISI KANAN: PANEL PREVIEW DOKUMEN -->
+    <VBox alignment="TOP_CENTER" spacing="14.0" prefWidth="540.0" styleClass="card-panel">
+        <padding>
+            <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+        </padding>
+
+        <Label text="Preview Dokumen" style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #334155;"/>
+
+        <!-- Container Tampilan Preview -->
+        <VBox alignment="CENTER" prefHeight="510.0" VBox.vgrow="ALWAYS" styleClass="preview-container">
+            <ImageView fx:id="previewImageView" preserveRatio="true" fitWidth="480.0" fitHeight="470.0"/>
+            <Label fx:id="previewInfoLabel" text="Belum ada berkas dipilih" styleClass="label-text" wrapText="true" alignment="CENTER"/>
+        </VBox>
+    </VBox>
+</HBox>
