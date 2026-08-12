@@ -92,7 +92,37 @@ public class MainController {
     }
 
     private void setFiles(List<File> files) {
-        this.selectedFiles = files;
+        List<File> extractedFiles = new ArrayList<>();
+
+        for (File file : files){
+            if (file.isDirectory()){
+                File[] dirFiles = file.listFiles();
+                if (dirFiles != null){
+                    for (File f : dirFiles){
+                        if (f.isFile()){
+                            extractedFiles.add(f);
+                        }
+                    }
+                }
+            }else {
+                extractedFiles.add(file);
+            }
+        }
+
+        this.selectedFiles = extractedFiles;
+
+        if (this.selectedFiles.isEmpty()){
+            fileLabel.setText("Tarik & Lepas Berkas/Folder di sini");
+            clearPreview("Tidak ada berkas valid yang ditemukan.");
+        }else if (this.selectedFiles.size() == 1){
+            File file = this.selectedFiles.get(0);
+            fileLabel.setText("1 Berkas dipilih: " + file.getName());
+            updatePreview(file);
+        }else {
+            fileLabel.setText(this.selectedFiles.size() + " Berkas Dipilih untuk Konversi Sekaligus");
+            clearPreview("Preview tidak tersedia untuk banyak berkas sekaligus.");
+        }
+        /*this.selectedFiles = files;
         if (files.size() == 1) {
             File file = files.get(0);
             fileLabel.setText("1 Berkas Dipilih: " + file.getName());
@@ -104,7 +134,7 @@ public class MainController {
 
             // Kosongkan preview jika pengguna memilih banyak file
             clearPreview("Preview tidak tersedia untuk banyak berkas sekaligus.");
-        }
+        }*/
     }
 
     @FXML

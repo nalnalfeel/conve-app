@@ -34,7 +34,7 @@
         <VBox fx:id="dropArea" alignment="CENTER" spacing="12.0" prefHeight="180.0"
               onDragOver="#handleDragOver" onDragDropped="#handleDragDropped"
               styleClass="drop-zone">
-            <Label fx:id="fileLabel" text="Tarik &amp; Lepas Berkas di Sini"
+            <Label fx:id="fileLabel" text="Tarik &amp; Lepas Berkas atau Folder di Sini"
                    styleClass="label-text" wrapText="true" alignment="CENTER"/>
             <Button text="Pilih Berkas" onAction="#handleSelectFile" styleClass="btn-secondary" prefWidth="120.0" prefHeight="32.0"/>
         </VBox>

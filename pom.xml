@@ -90,6 +90,20 @@
             <version>2.20.0</version>
         </dependency>
 
+            <!-- Tambahkan untuk dukungan format .doc (Word 97-2003) -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-scratchpad</artifactId>
+                <version>5.2.5</version>
+            </dependency>
+
+            <!-- Tambahkan untuk penanganan dan konversi format Gambar (WEBP, BMP, PNG, JPG) -->
+            <dependency>
+                <groupId>net.coobird</groupId>
+                <artifactId>thumbnailator</artifactId>
+                <version>0.4.20</version>
+            </dependency>
+
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
