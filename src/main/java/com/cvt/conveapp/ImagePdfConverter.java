@@ -1,5 +1,6 @@
 package com.cvt.conveapp;
 
+import javafx.scene.image.Image;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -35,6 +36,21 @@ public class ImagePdfConverter {
                 File outputFile = new File(outputDir,"halaman" + (i + 1) + "." + format.toLowerCase());
                 ImageIO.write(bim, format, outputFile);
             }
+        }
+    }
+
+    public static void imagesToPdf(java.util.List<File> imageFiles, File outputPdf) throws Exception{
+        try(PDDocument doc = new PDDocument()) {
+            for (File imageFile : imageFiles){
+                PDPage page = new PDPage();
+                doc.addPage(page);
+
+                PDImageXObject image = PDImageXObject.createFromFileByContent(imageFile, doc);
+                try (PDPageContentStream content = new PDPageContentStream(doc, page)){
+                    content.drawImage(image, 20, 20, page.getMediaBox().getWidth() - 40, page.getMediaBox().getHeight() - 40);
+                }
+            }
+            doc.save(outputPdf);
         }
     }
 }

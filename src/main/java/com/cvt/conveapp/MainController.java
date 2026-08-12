@@ -161,29 +161,41 @@ public class MainController {
             protected Void call() throws Exception {
                 int total = selectedFiles.size();
 
-                for (int i = 0; i < total; i++) {
-                    File file = selectedFiles.get(i);
-                    String baseName = getFileNameWithoutExtension(file);
-                    String ext = getOutputExtension(mode);
+                // Cek apakah mode yang dipilih adalah Gambar ke PDF DAN ada lebih dari 1 file
+                if (mode.equals("Gambar ke PDF (.jpg/.png -> .pdf)") && total > 1) {
+                    updateMessage("Menggabungkan " + total + " gambar menjadi 1 file PDF...");
 
-                    updateMessage("Memproses (" + (i + 1) + "/" + total + "): " + file.getName());
-                    updateProgress(i, total);
+                    // Nama file gabungan otomatis
+                    File outputFile = new File(outputDir, "Gabungan_Gambar_Converted.pdf");
 
-                    if (mode.contains("PDF ke Gambar")) {
-                        File subDir = new File(outputDir, baseName + "_images");
-                        if (!subDir.exists()) subDir.mkdirs();
-                        ImagePdfConverter.pdfToImage(file, subDir, "jpg");
-                    } else {
-                        File outputFile = new File(outputDir, baseName + ext);
-                        executeSingleConversion(mode, file, outputFile);
+                    // Panggil fungsi merge yang baru dibuat
+                    ImagePdfConverter.imagesToPdf(selectedFiles, outputFile);
+
+                    updateProgress(1, 1); // Langsung selesai karena dijadikan 1 file
+                } else {
+                    // Logika awal: Konversi satu per satu (Batch) untuk mode lain
+                    for (int i = 0; i < total; i++) {
+                        File file = selectedFiles.get(i);
+                        String baseName = getFileNameWithoutExtension(file);
+                        String ext = getOutputExtension(mode);
+
+                        updateMessage("Memproses (" + (i + 1) + "/" + total + "): " + file.getName());
+                        updateProgress(i, total);
+
+                        if (mode.contains("PDF ke Gambar")) {
+                            File subDir = new File(outputDir, baseName + "_images");
+                            if (!subDir.exists()) subDir.mkdirs();
+                            ImagePdfConverter.pdfToImage(file, subDir, "jpg");
+                        } else {
+                            File outputFile = new File(outputDir, baseName + ext);
+                            executeSingleConversion(mode, file, outputFile);
+                        }
                     }
+                    updateProgress(total, total);
                 }
-
-                updateProgress(total, total);
                 return null;
             }
         };
-
         progressBar.progressProperty().bind(batchTask.progressProperty());
         statusLabel.textProperty().bind(batchTask.messageProperty());
 
