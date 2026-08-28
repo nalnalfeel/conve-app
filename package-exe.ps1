@@ -2,7 +2,16 @@ $ErrorActionPreference = "Stop"
 
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $targetDir = Join-Path $projectRoot "target"
-$jarFile = Get-ChildItem $targetDir -Filter "*shaded.jar" | Select-Object -First 1
+
+if (-not (Test-Path $targetDir)) {
+    Write-Error "Folder target belum ada. Jalankan: .\mvnw.cmd -DskipTests package"
+    exit 1
+}
+
+$jarFile = Get-ChildItem $targetDir -Filter "*.jar" |
+    Where-Object { $_.Name -notmatch 'original-' } |
+    Sort-Object LastWriteTimeUtc |
+    Select-Object -Last 1
 
 if (-not $jarFile) {
     Write-Error "Tidak menemukan JAR hasil build. Jalankan: .\mvnw.cmd -DskipTests package"
@@ -27,17 +36,18 @@ if (-not $wix) {
 }
 
 $outputDir = Join-Path $targetDir "Hasil-EXE"
+if (Test-Path $outputDir) { Remove-Item $outputDir -Recurse -Force }
 New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
 
-& $jpackage \
-  --type exe \
-  --name "Conve App" \
-  --app-version "1.0.1" \
-  --input $targetDir \
-  --main-jar $jarFile.Name \
-  --main-class "com.cvt.conveapp.Launcher" \
-  --dest $outputDir \
-  --win-shortcut \
+& $jpackage `
+  --type exe `
+  --name "Conve App" `
+  --app-version "1.0.1" `
+  --input $targetDir `
+  --main-jar $jarFile.Name `
+  --main-class "com.cvt.conveapp.Launcher" `
+  --dest $outputDir `
+  --win-shortcut `
   --win-menu
 
 Write-Host "Package selesai. Hasil ada di: $outputDir"

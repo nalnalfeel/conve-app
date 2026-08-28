@@ -5,7 +5,7 @@ import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
@@ -17,12 +17,17 @@ import java.io.File;
 public class ImagePdfConverter {
     public static void imageToPdf(File imageFile, File outputPdf) throws Exception{
         try (PDDocument doc = new PDDocument()){
-            PDPage page = new PDPage();
+            BufferedImage sourceImage = ImageIO.read(imageFile);
+            if (sourceImage == null) {
+                throw new IllegalArgumentException("File gambar tidak valid: " + imageFile.getAbsolutePath());
+            }
+
+            PDPage page = createPageForImage(sourceImage);
             doc.addPage(page);
 
             PDImageXObject image = PDImageXObject.createFromFileByContent(imageFile, doc);
-            try (PDPageContentStream content = new PDPageContentStream(doc,page)){
-                content.drawImage(image,20,20, page.getMediaBox().getWidth() -40, page.getMediaBox().getHeight() - 40);
+            try (PDPageContentStream content = new PDPageContentStream(doc, page)){
+                content.drawImage(image, 0, 0, page.getMediaBox().getWidth(), page.getMediaBox().getHeight());
             }
             doc.save(outputPdf);
         }
@@ -42,15 +47,26 @@ public class ImagePdfConverter {
     public static void imagesToPdf(java.util.List<File> imageFiles, File outputPdf) throws Exception{
         try(PDDocument doc = new PDDocument()) {
             for (File imageFile : imageFiles){
-                PDPage page = new PDPage();
+                BufferedImage sourceImage = ImageIO.read(imageFile);
+                if (sourceImage == null) {
+                    throw new IllegalArgumentException("File gambar tidak valid: " + imageFile.getAbsolutePath());
+                }
+
+                PDPage page = createPageForImage(sourceImage);
                 doc.addPage(page);
 
                 PDImageXObject image = PDImageXObject.createFromFileByContent(imageFile, doc);
                 try (PDPageContentStream content = new PDPageContentStream(doc, page)){
-                    content.drawImage(image, 20, 20, page.getMediaBox().getWidth() - 40, page.getMediaBox().getHeight() - 40);
+                    content.drawImage(image, 0, 0, page.getMediaBox().getWidth(), page.getMediaBox().getHeight());
                 }
             }
             doc.save(outputPdf);
         }
+    }
+
+    private static PDPage createPageForImage(BufferedImage image) {
+        float width = Math.max(image.getWidth(), 1);
+        float height = Math.max(image.getHeight(), 1);
+        return new PDPage(new PDRectangle(width, height));
     }
 }

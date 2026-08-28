@@ -6,6 +6,7 @@ Cara build aplikasi:
 
 Cara membuat file .exe Windows:
 - Install WiX Toolset 3.x atau lebih dari https://wixtoolset.org
+- Jika PowerShell memblokir script, jalankan: powershell -ExecutionPolicy Bypass -File .\package-exe.ps1
 - Setelah itu jalankan: .\package-exe.ps1
 
 Catatan penting:
