@@ -1,11 +1,13 @@
 package com.cvt.conveapp;
 
+import javafx.application.Application;
+
 /**
- * Kelas perantara murni agar JavaFX bisa dibungkus menjadi Fat JAR dan .exe dengan aman.
+ * Kelas launcher tunggal untuk menjalankan aplikasi JavaFX.
+ * InterfaceApplication tidak lagi dipakai sebagai entry point langsung.
  */
 public class Launcher {
     public static void main(String[] args) {
-        // Memanggil fungsi utama dari aplikasi antarmuka kita
-        InterfaceApplication.main(args);
+        Application.launch(InterfaceApplication.class, args);
     }
 }

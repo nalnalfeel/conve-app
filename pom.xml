@@ -121,6 +121,32 @@
                     <release>21</release>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-tessdata</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/tessdata</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/tessdata</directory>
+                                    <includes>
+                                        <include>*.traineddata</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Plugin untuk membuat Fat JAR (Menggabungkan semua library) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -163,8 +189,8 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <!-- DIPERBAIKI: Mengarahkan ke InterfaceApplication -->
-                            <mainClass>com.cvt.conveapp/com.cvt.conveapp.InterfaceApplication</mainClass>
+                            <!-- Entry point aplikasi hanya melalui Launcher -->
+                            <mainClass>com.cvt.conveapp/com.cvt.conveapp.Launcher</mainClass>
 
                             <!-- TAMBAHKAN BLOK OPTIONS INI -->
                             <options>
